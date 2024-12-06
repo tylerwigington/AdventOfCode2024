@@ -1,11 +1,10 @@
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode2024.Problems;
 
 public static class Day3
 {
-    private static Regex Instruction = new(@"^mul");
+    private static Regex Instruction = new(@"mul");
     private static Regex IsDigit = new(@"^\d+$");
     private const char InstructionStart = '(';
     private const char InstructionEnd = ')';
@@ -20,47 +19,7 @@ public static class Day3
         using var file = File.OpenText("./Inputs/day3.txt");
         var corruptedInstructions = await file.ReadToEndAsync();
 
-        List<(long, long)> instructions = [];
-        var i = 0;
-        while(i < corruptedInstructions.Length - WindowSize)
-        {
-            // range syntax not inclusive
-            var window = corruptedInstructions[i..(i + WindowSize + 1)];
-            if (!Instruction.IsMatch(window))
-            {
-                i++;
-                continue;
-            }
-
-            if (corruptedInstructions.ElementAtOrDefault(i + InstructionOffSet) != InstructionStart)
-            {
-                i += InstructionOffSet;
-                continue;
-            }
-
-            var iStart = i + InstructionOffSet + 1;
-            var y = iStart;
-            while (IsDigit.IsMatch(corruptedInstructions[y].ToString()) || corruptedInstructions[y] == InstructionSeparator)
-            {
-                y++;
-            }
-
-            if (corruptedInstructions[y] != InstructionEnd)
-            {
-                i += y - i;
-                continue;
-            }
-            
-            var pair =  corruptedInstructions[iStart..y].Split(InstructionSeparator);
-            if (pair.Length != 2)
-            {
-                i += y - i;
-                continue;
-            }
-            instructions.Add((long.Parse(pair[0]), long.Parse(pair[1])));
-            i += y - i;
-        }
-
+        List<(long, long)> instructions = ParseInstructions(corruptedInstructions);
         return instructions.Aggregate(0L, (curr, next) => curr += next.Item1 * next.Item2);
     }
     

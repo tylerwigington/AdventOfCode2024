@@ -8,6 +8,7 @@ public partial class Day3Better
 
     private static readonly Regex IsDigit = GetIsDigitRegex();
     private static readonly Regex InstructionRegex = GetInstructionRegex();
+    private static readonly Regex InstructionCommandRegex = GetInstructionCommandRegex();
     
     private const string InstructionCommand = "mul";
     private const char InstructionStart = '(';
@@ -74,7 +75,7 @@ public partial class Day3Better
         {
             // range syntax not inclusive
             var window = corruptedInstructions[i..(i + WindowSize + 1)];
-            if (window == InstructionCommand)
+            if (InstructionCommandRegex.IsMatch(window))
             {
                 i++;
                 continue;
@@ -110,4 +111,6 @@ public partial class Day3Better
     private static partial Regex GetInstructionRegex();
     [GeneratedRegex(@"^\d+$")]
     private static partial Regex GetIsDigitRegex();
+    [GeneratedRegex(@"mul")]
+    private static partial Regex GetInstructionCommandRegex();
 }
