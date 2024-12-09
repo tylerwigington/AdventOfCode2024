@@ -2,15 +2,7 @@ namespace AdventOfCode2024.Problems;
 
 public record Direction(int Row, int Col);
 
-public enum MoveDirection
-{
-    Up,
-    Down,
-    Right,
-    Left
-}
-
-public record Turn(int Row, int Col, MoveDirection PreviousMoveDirection);
+public record Turn(int Row, int Col);
 
 public static class Day6
 {
@@ -23,6 +15,14 @@ public static class Day6
     private static readonly Direction _down = new(1, 0);
     private static readonly Direction _left = new(0, -1);
     private static readonly Direction _right = new(0, 1);
+
+    private static readonly Direction[] _directions =
+    [
+        _up,
+        _right,
+        _down,
+        _left
+    ];
     
     public static async Task<int> Part1Async()
     {
@@ -43,26 +43,28 @@ public static class Day6
             }
         }
 
-        var currentDirection = MoveDirection.Up;
+        var directionIndex = 0;
+        // var currentDirection = MoveDirection.Up;
         var row = start.Row;
         var col = start.Col;
         var uniquePoints = new HashSet<string>();
-        var turns = new List<Turn> { new(row, col, MoveDirection.Left) };
+        // var turns = new List<Turn> { new(row, col, MoveDirection.Left) };
         while (true)
         {
-            var direction = GetDirection(currentDirection);
+            var direction = _directions[directionIndex % 4];
             if (!InBounds(map, row, col, direction))
             {
-                turns.Add(new Turn(col, row, currentDirection));
+                // turns.Add(new Turn(col, row, currentDirection));
                 break;
             };
 
             if (map[row + direction.Row][col + direction.Col] == _block)
             {
-                map[row][col] = _turn;
-                var prev = currentDirection;
-                currentDirection = ChangeDirection(currentDirection);
-                turns.Add(new Turn(row, col, prev));
+                // map[row][col] = _turn;
+                // var prev = currentDirection;
+                directionIndex++;
+                // currentDirection = ChangeDirection(currentDirection);
+                // turns.Add(new Turn(row, col, prev));
                 continue;
             };
             
@@ -84,40 +86,6 @@ public static class Day6
                col + direction.Col < map.Count;
     }
     
-    private static Direction GetDirection(MoveDirection moveDirection) => moveDirection switch
-    {
-        MoveDirection.Up => _up,
-        MoveDirection.Down => _down,
-        MoveDirection.Right => _right,
-        MoveDirection.Left => _left,
-        _ => throw new Exception()
-    };
-    
-    private static MoveDirection ChangeDirection(MoveDirection moveDirection) => moveDirection switch
-    {
-        MoveDirection.Up => MoveDirection.Right,
-        MoveDirection.Right => MoveDirection.Down,
-        MoveDirection.Down => MoveDirection.Left,
-        MoveDirection.Left => MoveDirection.Up,
-        _ => throw new Exception()
-    };
-
-    private static string GetChar(MoveDirection currentMoveDirection) => currentMoveDirection switch
-    {
-        MoveDirection.Up or MoveDirection.Down => "|",
-        MoveDirection.Right or MoveDirection.Left => "-",
-        _ => string.Empty
-    };
-
-    private static int CalcDistance(Turn a, Turn b) => a.PreviousMoveDirection switch
-    {
-        MoveDirection.Up => Math.Abs(a.Col - b.Col),
-        MoveDirection.Left => Math.Abs(a.Row - b.Row),
-        MoveDirection.Down => Math.Abs(a.Col- b.Col),
-        MoveDirection.Right => Math.Abs(a.Row - b.Row),
-        _ => throw new InvalidOperationException()
-    };
-
     private static void PrintMap(List<List<string>> map)
     {
         foreach (var row in map)
