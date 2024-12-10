@@ -1,5 +1,5 @@
 ﻿using AdventOfCode2024.Problems;
-using BenchmarkDotNet.Running;
+using System.Diagnostics;
 
 // var day1p1 = await Day1.RunPart1Async();
 // Console.WriteLine("Day 1 Part 1: " + day1p1);
@@ -23,6 +23,14 @@ using BenchmarkDotNet.Running;
 // Console.WriteLine("Day 5 Part 1: " + day5);
 // var day5p2 = await Day5.Part2Async();
 // Console.WriteLine("Day 5 Part 2: " + day5p2);
-var day6 = await Day6.Part1Async();
-Console.WriteLine("Day 6 Part 1: " + day6);
+//var day6 = await Day6.Part1Async();
+//Console.WriteLine("Day 6 Part 1: " + day6);
+//var day7 = await Day7.Part1Async();
+//Debug.WriteLine(day7);
+//var day8 = await Day8.Part1Async();
+//Debug.WriteLine(day8);
+//var day8p2 = await Day8.Part2Async();
+//Debug.WriteLine(day8p2);
+var day9 = await Day9.Part1Async();
+Debug.WriteLine(day9);
 // var summary = BenchmarkRunner.Run<Benchmarks>();
