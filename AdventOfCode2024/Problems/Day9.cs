@@ -13,13 +13,56 @@ public static class Day9
             var sizeBit = file.Read();
             if (sizeBit == -1) break;
 
-            var size = int.Parse(((char)sizeBit).ToString());
-            var free = int.Parse(((char)file.Read()).ToString());
+            var size = Convert.ToInt32((char)sizeBit);
+            var free = Convert.ToInt32((char)file.Read());
             blocks.Add(new(currId, size, free));
             currId++;
         }
 
+        List<FileBlock> sorted = [];
+        Dictionary<int, Queue<FileBlock>> blockQueues = new();
+        while (blocks.Count > 0)
+        {
+            var first = blocks.First();
+            if (blockQueues.TryGetValue(first.FreeSpace, out var queue) && queue.TryDequeue(out var block))
+            {
+                sorted.Add(first);
+                sorted.Add(block);
+                continue;
+            }
+            
+            var last = blocks.LastOrDefault();
+            
+            if (last.Length == first.FreeSpace)
+            {
+                sorted.Add(first);
+                sorted.Add(last);
+                blocks.RemoveAt(blocks.Count - 1);
+                continue;
+            }
+            
+            while (last.Length != first.FreeSpace)
+            {
+                
+                if(!blockQueues.ContainsKey(last.Length))
+                    blockQueues.Add(last.Length, []);
+                blockQueues[last.Length].Enqueue(last);
+                blocks.RemoveAt(blocks.Count - 1);
+                last = blocks.Last();
+            }
+            sorted.AddRange([first, last]);
+        }
+
+        PrintBlocks(sorted);
         return blocks.Count;
+    }
+
+    private static void PrintBlocks(List<FileBlock> blocks)
+    {
+        foreach (var block in blocks)
+        {
+            
+        }
     }
 }
 
