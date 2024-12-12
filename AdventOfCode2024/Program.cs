@@ -31,6 +31,7 @@ using System.Diagnostics;
 //Debug.WriteLine(day8);
 //var day8p2 = await Day8.Part2Async();
 //Debug.WriteLine(day8p2);
-var day9 = await Day9.Part1Async();
-Debug.WriteLine(day9);
+var day9 = Day9.Part1();
+Console.WriteLine(day9);
+
 // var summary = BenchmarkRunner.Run<Benchmarks>();
