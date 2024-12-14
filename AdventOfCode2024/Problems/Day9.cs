@@ -4,10 +4,14 @@ namespace AdventOfCode2024.Problems;
 
 public static class Day9
 {
-    public static long Part1()
+    public static async Task<long> Part1()
     {
         using var file = File.OpenText("./Inputs/day9.txt");
-        
+
+        //using var ms = new MemoryStream();
+        //await ms.WriteAsync(Encoding.ASCII.GetBytes("12345"));
+        //ms.Seek(0, SeekOrigin.Begin);
+        //using var file = new StreamReader(ms);
         var currId = 0;
         List<FileBlock> blocks = [];
         while (!file.EndOfStream)
@@ -36,7 +40,7 @@ public static class Day9
         {
             var first = blocks.First();
             var last = lastQueue.Peek();
-            while (!first.Full && blocks.Count > 0)
+            while (!first.Full && blocks.Count > 1)
             {
                 if(last.Size - last.SizeUsed == 0)
                 {
@@ -48,9 +52,8 @@ public static class Day9
                     continue;
                 }
 
-                var available = first.FreeSpace - first.FreeBlocks.Count;
-                if(available > last.Size - last.SizeUsed) available = last.Size - last.SizeUsed;
-                first.FreeBlocks.AddRange(Enumerable.Repeat(new FillBlock(last.Id), available));
+                var available = Math.Min(first.FreeSpace - first.FreeBlocks.Count, last.Size - last.SizeUsed);
+                first.FreeBlocks.AddRange(Enumerable.Repeat(last.Id, available));
                 last.SizeUsed += available;
             }
             sorted.Add(first);
@@ -69,10 +72,10 @@ public static class Day9
         }
 
         var sum = 0;
-        var temp = sorted.SelectMany(s => Enumerable.Repeat(new FillBlock(s.Id), s.Size).Concat(s.FreeBlocks)).ToList();
+        var temp = sorted.SelectMany(s => Enumerable.Repeat(s.Id, s.Size).Concat(s.FreeBlocks)).ToList();
         for(var i = 0; i < temp.Count; i++)
         {
-            sum += i * temp[i].BlockId;
+            sum += i * temp[i];
         }
         return sum;
     }
@@ -84,7 +87,7 @@ public sealed class FileBlock
     public required int Size { get; init; }
     public required int FreeSpace { get; init; }
     public int SizeUsed { get; set; }
-    public List<FillBlock> FreeBlocks { get; } = [];
+    public List<int> FreeBlocks { get; } = [];
     public bool Full => FreeBlocks.Count == FreeSpace;
 }
 
