@@ -6,7 +6,7 @@ namespace AdventOfCode2024;
 
 public class Benchmarks
 {
-    private Day3Better _day3Better;
+    private Day3Better? _day3Better;
 
     [GlobalSetup]
     public async Task Setup()
@@ -17,12 +17,12 @@ public class Benchmarks
     [Benchmark]
     public long Split()
     {
-        return _day3Better.Split();
+        return _day3Better!.Split();
     }
-    
+
     [Benchmark]
     public long Regex()
     {
-        return _day3Better.RunRegex();
+        return _day3Better!.RunRegex();
     }
 }

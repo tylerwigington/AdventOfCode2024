@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using AdventOfCode2024.Shared;
 
 namespace AdventOfCode2024.Problems;
@@ -41,9 +40,9 @@ public static partial class Day8
             if (string.IsNullOrEmpty(line)) continue;
             numCols = Math.Max(numCols, line.Length);
             var matches = _frequency.Matches(line);
-            foreach(Match match in matches)
+            foreach (Match match in matches)
             {
-                if(!antennas.ContainsKey(match.Value))
+                if (!antennas.ContainsKey(match.Value))
                     antennas.Add(match.Value, []);
                 antennas[match.Value].Add(new(numRows, match.Index));
             }
@@ -59,7 +58,7 @@ public static partial class Day8
                 {
                     var first = group.Value[i];
                     var second = group.Value[j];
-                    if(first == second) continue;
+                    if (first == second) continue;
                     if (TryGetAntinode(first, second, numRows, numCols, out var result))
                         antiNodes.Add(result!);
                     if (TryGetAntinode(second, first, numRows, numCols, out var result2))
@@ -145,5 +144,3 @@ public static partial class Day8
     [GeneratedRegex("[0-9A-Za-z]")]
     private static partial Regex FreguencyRegex();
 }
-
-public sealed record Coordinate(int Row, int Col);
